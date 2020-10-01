@@ -5,8 +5,8 @@ declare var process: any;
 const GlobalMeta = () => {
     return (
         <Head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <meta http-equiv="cleartype" content="on" />
+            <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta httpEquiv="cleartype" content="on" />
             <meta name="msapplication-TileColor" content={process.env.THEME.PRIMARY} />
             <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
             <meta name="theme-color" content={process.env.THEME.PRIMARY} />

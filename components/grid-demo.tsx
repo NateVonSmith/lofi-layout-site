@@ -1,69 +1,69 @@
 import { useEffect, useRef, useState } from 'react';
 import { cellColors, copyToClipboard, gapPxOptions } from '../utils/constants';
+import { LayoutConfig } from '../utils/interfaces';
 
 const columnCountOptions = [1, 2, 3, 4, 6];
 const cellSizeOptions = [80, 100, 120, 140];
 
 const GridDemo = () => {
     const [columnCount, setColumnCount] = useState(columnCountOptions[columnCountOptions.length - 1]);
-    const [cellSize, setCellSize] = useState(cellSizeOptions[0]);
+    const [cellSize, setCellSize] = useState(null);
     const [gapPx, setGapPx] = useState<number>(Number(gapPxOptions[0]));
     const [classText, setClassText] = useState<string>();
     const inputRef = useRef(null);
 
+    const layoutConfig: LayoutConfig[] = [
+        {
+            options: columnCountOptions,
+            stateVal: columnCount,
+            setStateVal: setColumnCount
+        },
+        {
+            options: cellSizeOptions,
+            stateVal: cellSize,
+            setStateVal: setCellSize
+        },
+        {
+            options: gapPxOptions,
+            stateVal: gapPx,
+            setStateVal: setGapPx
+        }
+    ];
+
     useEffect(() => {
+        console.log(columnCount, cellSize);
+
+        if (columnCount !== null && cellSize !== null) setCellSize(null);
+        if (cellSize !== null && columnCount !== null) setColumnCount(null);
+
         setClassText(`lofi-grid lofi-grid-columns-${columnCount} lofi-cell-${cellSize} lofi-gap-${gapPx}`);
     }, [columnCount, cellSize, gapPx]);
 
     return (
-        <div style={{ height: '100vh' }} className="lofi-layout lofi-column lofi-gap-10">
-            <form>
-                <input style={{ width: '100%' }} type="text" ref={inputRef} value={classText} onClick={() => copyToClipboard(inputRef)} />
-            </form>
-
-            <form className="lofi-layout lofi-row">
-                <div>
-                    {columnCountOptions.map((count) => (
-                        <div>
-                            <input
-                                type="radio"
-                                value={count}
-                                onChange={(e) => setColumnCount(Number(e.target.value))}
-                                checked={columnCount === count}
-                            />
-                            {count}
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {cellSizeOptions.map((size) => (
-                        <div>
-                            <input
-                                type="radio"
-                                value={size}
-                                onChange={(e) => setCellSize(Number(e.target.value))}
-                                checked={cellSize === size}
-                            />
-                            {size}
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {gapPxOptions.map((px) => (
-                        <div>
-                            <input type="radio" value={px} onChange={(e) => setGapPx(Number(e.target.value))} checked={gapPx === px} />
-                            {px}px
-                        </div>
-                    ))}
-                </div>
-            </form>
-
-            <div style={{ width: '100%' }} className={classText}>
-                {[...cellColors, ...cellColors, ...cellColors, ...cellColors].map((color) => (
-                    <div style={{ backgroundColor: `#${color}`, padding: '40px' }}></div>
+        <section className="demo-container lofi-layout lofi-column lofi-gap-10">
+            <input className="w-100-pct" type="text" ref={inputRef} value={classText} onClick={() => copyToClipboard(inputRef)} />
+            <div className="lofi-layout lofi-row lofi-space-between-center lofi-gap-10">
+                {layoutConfig.map(({ options, stateVal, setStateVal }) => (
+                    <div>
+                        {options.map((option, i) => (
+                            <button
+                                key={i}
+                                value={option}
+                                onClick={() => setStateVal(option)}
+                                className={stateVal === option ? 'selected' : ''}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </div>
                 ))}
             </div>
-        </div>
+            <div className={`w-100-pct ${classText} layout-container`}>
+                {[...cellColors, ...cellColors, ...cellColors, ...cellColors].map((color, i) => (
+                    <div key={i} style={{ backgroundColor: `#${color}` }}></div>
+                ))}
+            </div>
+        </section>
     );
 };
 

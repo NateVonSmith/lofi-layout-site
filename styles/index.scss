@@ -2,8 +2,54 @@
 @import '~lofi-defaults/src/scss/_browser-defaults';
 @import url('https://fonts.googleapis.com/css2?family=Mada:wght@300;400;600;900&display=swap');
 
+$whiteTrans: rgba(255, 255, 255, 0.3);
+$blackTrans: rgba(0, 0, 0, 0.3);
+
 body {
     font-family: 'Mada', sans-serif;
     color: var(--primary-text-color);
     background-color: var(--primary-bg-color);
+}
+
+.w-100-pct {
+    width: 100%;
+}
+
+main {
+    background: linear-gradient(to bottom right, $whiteTrans, $blackTrans);
+
+    .page-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+}
+
+input {
+    padding: 20px;
+    border: none;
+}
+
+.demo-container {
+    min-height: calc(100vh - 40px);
+
+    .layout-container {
+        background-color: #fff;
+    }
+
+    .tile {
+        height: 50%;
+        padding: 40px;
+    }
+
+    button {
+        border: none;
+        background-color: white;
+        padding: 10px;
+
+        &.selected {
+            background-color: rebeccapurple;
+            color: white;
+        }
+    }
 }

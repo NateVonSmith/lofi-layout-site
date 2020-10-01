@@ -1,9 +1,10 @@
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { cellColors, copyToClipboard, gapPxOptions } from '../utils/constants';
+import { LayoutConfig } from '../utils/interfaces';
 
-const flexDirectionOptions = ['row', 'column'];
-const flexSpacingOptions = [
+const flexDirectionOptions: string[] = ['row', 'column'];
+const flexSpacingOptions: string[] = [
     'start',
     'end-center',
     'start-center',
@@ -16,8 +17,8 @@ const flexSpacingOptions = [
     'space-between-stretch',
     'space-evenly'
 ];
-const gapPctOptions = []; // [3, 10, 20, 21, 24, 25, 30, 33, 34, 40, 49, 50, 60, 64, 65, 66, 75, 80, 100];
-const childSizeOptions = [
+const gapPctOptions: number[] = []; // [3, 10, 20, 21, 24, 25, 30, 33, 34, 40, 49, 50, 60, 64, 65, 66, 75, 80, 100];
+const childSizeOptions: string[] = [
     'lofi-flex-3-percent',
     'lofi-flex-10-percent',
     'lofi-flex-20-percent',
@@ -49,6 +50,29 @@ const FlexDemo = () => {
     const [classText, setClassText] = useState<string>();
     const inputRef = useRef(null);
 
+    const layoutConfig: LayoutConfig[] = [
+        {
+            options: flexDirectionOptions,
+            stateVal: flexDirection,
+            setStateVal: setFlexDirection
+        },
+        {
+            options: flexSpacingOptions,
+            stateVal: flexSpacing,
+            setStateVal: setFlexSpacing
+        },
+        {
+            options: gapPxOptions,
+            stateVal: gapPx,
+            setStateVal: setGapPx
+        },
+        {
+            options: gapPctOptions,
+            stateVal: gapPct,
+            setStateVal: setGapPct
+        }
+    ];
+
     useEffect(() => {
         setClassText(`lofi-layout lofi-${flexDirection} lofi-${flexSpacing} lofi-gap-${gapPx}`);
     }, [flexDirection, flexSpacing, gapPx]);
@@ -62,64 +86,34 @@ const FlexDemo = () => {
     };
 
     return (
-        <div style={{ height: '100vh' }} className="lofi-layout lofi-column lofi-gap-10">
-            <form>
-                <input style={{ width: '100%' }} type="text" ref={inputRef} value={classText} onClick={() => copyToClipboard(inputRef)} />
-            </form>
-
-            <form className="lofi-layout lofi-row">
-                <div>
-                    {flexDirectionOptions.map((dir) => (
-                        <div>
-                            <input
-                                type="radio"
-                                value={dir}
-                                onChange={(e) => setFlexDirection(e.target.value)}
-                                checked={flexDirection === dir}
-                            />
-                            {dir}
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {flexSpacingOptions.map((spacing) => (
-                        <div>
-                            <input
-                                type="radio"
-                                value={spacing}
-                                onChange={(e) => setFlexSpacing(e.target.value)}
-                                checked={flexSpacing === spacing}
-                            />
-                            {spacing}
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {gapPxOptions.map((px) => (
-                        <div>
-                            <input type="radio" value={px} onChange={(e) => setGapPx(Number(e.target.value))} checked={gapPx === px} />
-                            {px}px
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {gapPctOptions.map((pct) => (
-                        <div>
-                            <input type="radio" value={pct} onChange={handleGapPctChange} checked={gapPct === pct} />
-                            {pct}%
-                        </div>
-                    ))}
-                </div>
-            </form>
-            <div style={{ width: '100%' }} className={classText + ' lofi-stretch'}>
+        <section className="demo-container lofi-layout lofi-column lofi-gap-10">
+            <input className="w-100-pct" type="text" ref={inputRef} value={classText} onClick={() => copyToClipboard(inputRef)} />
+            <div className="lofi-layout lofi-row lofi-space-between-center lofi-gap-10">
+                {layoutConfig.map(({ options, stateVal, setStateVal }) => (
+                    <div>
+                        {options.map((option, i) => (
+                            <button
+                                key={option + i}
+                                value={option}
+                                onClick={() => setStateVal(option)}
+                                className={stateVal === option ? 'selected' : ''}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </div>
+                ))}
+            </div>
+            <div className={`w-100-pct ${classText} lofi-stretch layout-container`}>
                 {cellColors.map((color, i) => (
                     <div
-                        style={{ backgroundColor: `#${color}`, padding: '40px', height: '100%' }}
-                        className={cn(i === 2 ? `lofi-flex-${gapPct}-percent` : `lofi-flex-${gapOtherPct}-percent`)}
+                        key={color + i}
+                        style={{ backgroundColor: `#${color}` }}
+                        className={cn('tile', i === 2 ? `lofi-flex-${gapPct}-percent` : `lofi-flex-${gapOtherPct}-percent`)}
                     ></div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 };
 

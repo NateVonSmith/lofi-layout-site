@@ -9,7 +9,7 @@ const Layout = ({ children }: Props) => {
     return (
         <>
             <GlobalMeta />
-            <main className="main-container">{children}</main>
+            <main>{children}</main>
         </>
     );
 };

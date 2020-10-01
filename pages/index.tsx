@@ -16,9 +16,8 @@ const Index = ({}) => {
                 <Head>
                     <title>{process.env.APP_NAME}</title>
                 </Head>
-                <div>
+                <div className="page-content">
                     <FlexDemo />
-
                     <GridDemo />
                 </div>
             </Layout>
